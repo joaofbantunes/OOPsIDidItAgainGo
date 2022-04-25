@@ -31,13 +31,6 @@ func handleAddItemToCart(w http.ResponseWriter, r *http.Request, handlerFactory 
 
 	commandErr := handlerFactory()(c)
 	if commandErr != nil {
-		detail := struct {
-			Error string `json:"error"`
-		}{
-			Error: commandErr.Error(),
-		}
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(detail)
 
 		switch commandErr.(type) {
 		case errors.Invalid:
@@ -50,6 +43,13 @@ func handleAddItemToCart(w http.ResponseWriter, r *http.Request, handlerFactory 
 			w.WriteHeader(500)
 		}
 
+		detail := struct {
+			Error string `json:"error"`
+		}{
+			Error: commandErr.Error(),
+		}
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(detail)
 		return
 	}
 
