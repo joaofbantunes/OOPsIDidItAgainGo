@@ -33,25 +33,25 @@ type Cart struct {
 	items map[ItemId]*CartItem
 }
 
-func NewCart() Cart {
-	return Cart{
+func NewCart() *Cart {
+	return &Cart{
 		id:    NewCartId(),
 		items: make(map[ItemId]*CartItem),
 	}
 }
 
-func NewCartFrom(id CartId, items map[ItemId]*CartItem) Cart {
-	return Cart{
+func NewCartFrom(id CartId, items map[ItemId]*CartItem) *Cart {
+	return &Cart{
 		id:    id,
 		items: items,
 	}
 }
 
-func (cart Cart) Id() CartId {
+func (cart *Cart) Id() CartId {
 	return cart.id
 }
 
-func (cart Cart) AddItemToCart(item Item, quantity int) (*CartItem, error) {
+func (cart *Cart) AddItemToCart(item *Item, quantity int) (*CartItem, error) {
 
 	if _, exists := cart.items[item.id]; exists {
 		return nil, errors.NewDomain("item already in cart")
@@ -68,7 +68,7 @@ func (cart Cart) AddItemToCart(item Item, quantity int) (*CartItem, error) {
 	return cartItem, nil
 }
 
-func (cart Cart) UpdateItemInCart(itemId ItemId, quantity int) (*CartItem, error) {
+func (cart *Cart) UpdateItemInCart(itemId ItemId, quantity int) (*CartItem, error) {
 
 	if _, exists := cart.items[itemId]; !exists {
 		return nil, errors.NewDomain("item not in cart")
@@ -85,6 +85,6 @@ func (cart Cart) UpdateItemInCart(itemId ItemId, quantity int) (*CartItem, error
 	return cartItem, nil
 }
 
-func (cart Cart) RemoveItemFromCart(itemId ItemId) {
+func (cart *Cart) RemoveItemFromCart(itemId ItemId) {
 	delete(cart.items, itemId)
 }

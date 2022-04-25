@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-type ValidateItemSale func(cart Cart, item Item, quantity int) error
+type ValidateItemSale func(cart *Cart, item *Item, quantity int) error
 
 func validateMaximumQuantity(maximumQuantity int, quantity int) error {
 	if quantity > maximumQuantity {
@@ -15,8 +15,8 @@ func validateMaximumQuantity(maximumQuantity int, quantity int) error {
 	return nil
 }
 
-func NewValidateMaximumQuantity(maximumQuantity int) func(Cart, Item, int) error {
-	return func(cart Cart, item Item, quantity int) error {
+func NewValidateMaximumQuantity(maximumQuantity int) func(*Cart, *Item, int) error {
+	return func(cart *Cart, item *Item, quantity int) error {
 		return validateMaximumQuantity(maximumQuantity, quantity)
 	}
 }
@@ -37,20 +37,20 @@ func IsTimeOfDayReached(time time.Time, timeOfDay TimeOfDay) bool {
 	return false
 }
 
-func NewValidateMinimumTimeOfDay(minimumTimeOfDay TimeOfDay) func(Cart, Item, int) error {
-	return func(Cart, Item, int) error {
+func NewValidateMinimumTimeOfDay(minimumTimeOfDay TimeOfDay) func(*Cart, *Item, int) error {
+	return func(*Cart, *Item, int) error {
 		return validateMinimumTimeOfDay(minimumTimeOfDay)
 	}
 }
 
-func NewNoop() func(Cart, Item, int) error {
-	return func(Cart, Item, int) error {
+func NewNoop() func(*Cart, *Item, int) error {
+	return func(*Cart, *Item, int) error {
 		return nil
 	}
 }
 
-func NewComposite(validators ...ValidateItemSale) func(Cart, Item, int) error {
-	return func(cart Cart, item Item, quantity int) error {
+func NewComposite(validators ...ValidateItemSale) func(*Cart, *Item, int) error {
+	return func(cart *Cart, item *Item, quantity int) error {
 		for _, validator := range validators {
 			if err := validator(cart, item, quantity); err != nil {
 				return err

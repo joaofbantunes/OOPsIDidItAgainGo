@@ -45,6 +45,6 @@ type Item struct {
 	id ItemId
 }
 
-func NewItemFrom(id ItemId) Item {
-	return Item{id: id}
+func NewItemFrom(id ItemId) *Item {
+	return &Item{id: id}
 }

@@ -7,7 +7,7 @@ import (
 )
 
 type InMemoryCartRepository struct {
-	carts map[core.CartId]core.Cart
+	carts map[core.CartId]*core.Cart
 }
 
 func NewInMemoryCartRepository() InMemoryCartRepository {
@@ -17,27 +17,27 @@ func NewInMemoryCartRepository() InMemoryCartRepository {
 	}
 
 	return InMemoryCartRepository{
-		carts: map[core.CartId]core.Cart{
+		carts: map[core.CartId]*core.Cart{
 			cartId: core.NewCartFrom(cartId, make(map[core.ItemId]*core.CartItem)),
 		},
 	}
 }
 
-func (r InMemoryCartRepository) GetCartById(id core.CartId) (core.Cart, error) {
+func (r InMemoryCartRepository) GetCartById(id core.CartId) (*core.Cart, error) {
 	if cart, exists := r.carts[id]; exists {
 		return cart, nil
 	}
 
-	return core.Cart{}, errors.NewNotFound(fmt.Sprintf("Cart with id \"%s\" not found", id))
+	return nil, errors.NewNotFound(fmt.Sprintf("Cart with id \"%s\" not found", id))
 }
 
-func (r InMemoryCartRepository) SaveCart(cart core.Cart) error {
+func (r InMemoryCartRepository) SaveCart(cart *core.Cart) error {
 	r.carts[cart.Id()] = cart
 	return nil
 }
 
 type InMemoryItemRepository struct {
-	items map[core.ItemId]core.Item
+	items map[core.ItemId]*core.Item
 }
 
 func NewInMemoryItemRepository() InMemoryItemRepository {
@@ -47,18 +47,18 @@ func NewInMemoryItemRepository() InMemoryItemRepository {
 	}
 
 	return InMemoryItemRepository{
-		items: map[core.ItemId]core.Item{
+		items: map[core.ItemId]*core.Item{
 			itemId: core.NewItemFrom(itemId),
 		},
 	}
 }
 
-func (r InMemoryItemRepository) GetItemById(id core.ItemId) (core.Item, error) {
+func (r InMemoryItemRepository) GetItemById(id core.ItemId) (*core.Item, error) {
 	if item, exists := r.items[id]; exists {
 		return item, nil
 	}
 
-	return core.Item{}, errors.NewNotFound(fmt.Sprintf("Item with id \"%s\" not found", id))
+	return nil, errors.NewNotFound(fmt.Sprintf("Item with id \"%s\" not found", id))
 }
 
 type InMemoryItemSaleValidatorRepository struct {
