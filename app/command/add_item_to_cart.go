@@ -25,6 +25,7 @@ func addItemToCart(
 	itemRepository app.ItemRepository,
 	saleValidatorRepository app.ItemSaleValidatorRepository,
 	command AddItemToCart) error {
+
 	cart, getCartErr := cartRepository.GetCartById(command.CartId)
 	if getCartErr != nil {
 		return getCartErr
